@@ -1,9 +1,6 @@
 package club.friendsgame.cardrift.configurations;
 
-import club.friendsgame.cardrift.models.ChatMessaage;
-import club.friendsgame.cardrift.models.MessageType;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -24,11 +21,7 @@ public class WebSocketEventListener {
         String username = (String) headerAccessor.getSessionAttributes().get("username");
         if(username!=null){
             log.info("User disconnected: {}",username);
-            var chatMessage = ChatMessaage.builder()
-                    .type(MessageType.LEAVER)
-                    .sender(username)
-                    .build();
-            messageSendingOperations.convertAndSend("/table/public",chatMessage);
+            messageSendingOperations.convertAndSend("/table/public","User disconnected: "+username);
         }
     }
 
