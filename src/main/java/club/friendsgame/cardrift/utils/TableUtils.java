@@ -174,4 +174,19 @@ public class TableUtils {
     public static Player getPlayerWithIndex(Table table,int index){
         return table.getPlayers().stream().filter(player -> player.getId() == index).toList().get(0);
     }
+
+    public static boolean isWinningCard(Table table){
+        Player player = getActivePlayer(table);
+        return player.getDeck().size()==1;
+    }
+
+//    public static boolean isChallengePass(Table table) {// TODO
+//        Player previousPlayer = TableUtils.getPlayerWithIndex(table,table.getPreviousPlayerIndex());
+//        return !previousPlayer.getDeck().stream().filter(card -> card.getColorType()==table.getPreviousColor()).toList().isEmpty();
+//    }
+
+    public static boolean isBluff(Table table) {// TODO
+        Player player = TableUtils.getActivePlayer(table);
+        return !player.getDeck().stream().filter(card -> card.getColorType()==table.getActiveColor()).toList().isEmpty();
+    }
 }

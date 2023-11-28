@@ -202,13 +202,17 @@ public class Tables {
 
     public static void caughtSaid(String tableId, UserActionController userActionController,String userName){
         Table table = tables.get(tableId);
-        Player player = TableUtils.getPlayerWithIndex(table,table.getPreviousPlayerIndex());
-        if(player.getDeck().size()==1 && table.getUnoSaidPhase()!=1){
-            table.setUnoSaidPhase(0);
-            TableUtils.addCardsToPlayerDeck(table,2,player);
-            userActionController.sendToTable(tableId);
+        if(table.isChallengeActive()){
+            userActionController.sendToUser(userName,"let the challenge decision complete!");
         }else {
-            userActionController.sendToUser(userName,"fake caught");
+            Player player = TableUtils.getPlayerWithIndex(table, table.getPreviousPlayerIndex());
+            if (player.getDeck().size() == 1 && table.getUnoSaidPhase() != 1) {
+                table.setUnoSaidPhase(0);
+                TableUtils.addCardsToPlayerDeck(table, 2, player);
+                userActionController.sendToTable(tableId);
+            } else {
+                userActionController.sendToUser(userName, "fake caught");
+            }
         }
         // TODO: can add cards to player who said caught falsely
 
@@ -295,5 +299,56 @@ public class Tables {
         tables.put(tableId,table);
         startGame(tableId);
         userActionController.sendToTable(tableId);
+    }
+
+    public static void draw4Cards(String tableId, UserActionController userActionController) {// TODO
+        Table table = Tables.tables.get(tableId);
+        Player player = TableUtils.getActivePlayer(table);
+        if(!table.isChallengeActive()){
+            userActionController.sendToUser(player.getName(),"Invalid action!");
+        }else {
+            // add 4 cards to active player
+
+            for (int i = 0; i < 4; i++) {
+                player.getDeck().add(TableUtils.takeRandomCard(table.getCommonDeck(), table));
+            }
+            // change previous/active player index
+            table.setPreviousPlayerIndex(table.getActivePlayerIndex());
+            TableUtils.changeActivePlayer(table, 1);
+            // change challenge flag
+            table.setChallengeActive(false);
+            table.setBluff(false);
+            userActionController.sendToTable(table.getTableId());
+        }
+    }
+
+    public static void challengeDraw4(String tableId, UserActionController userActionController) { // TODO
+        Table table = Tables.tables.get(tableId);
+        Player activePlayer = TableUtils.getActivePlayer(table);
+        if(!table.isChallengeActive()){
+            userActionController.sendToUser(activePlayer.getName(),"Invalid action!");
+        }else {
+//            boolean isChallengePass = TableUtils.isChallengePass(table);
+            if (table.isBluff()) {
+                // previous player picks 4 cards
+                Player playerPrevious = TableUtils.getPlayerWithIndex(table, table.getPreviousPlayerIndex());
+                for (int i = 0; i < 4; i++) {
+                    playerPrevious.getDeck().add(TableUtils.takeRandomCard(table.getCommonDeck(), table));
+                }
+            } else {
+                // add 6 cards to active player
+
+                for (int i = 0; i < 6; i++) {
+                    activePlayer.getDeck().add(TableUtils.takeRandomCard(table.getCommonDeck(), table));
+                }
+                //change previous/active player
+                table.setPreviousPlayerIndex(table.getActivePlayerIndex());
+                TableUtils.changeActivePlayer(table, 1);
+            }
+            // change challenge flag
+            table.setChallengeActive(false);
+            table.setBluff(false);
+            userActionController.sendToTable(table.getTableId());
+        }
     }
 }

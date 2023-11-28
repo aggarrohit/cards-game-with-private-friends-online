@@ -16,8 +16,15 @@ public class WildDraw4CardPlayedImpl extends CardPlayedImpl implements WildDraw4
     @Override
     public void playCard(Table table, Card card) {
         super.playCard(table, card);
-        addCardsToNextPlayerDeck(table,4);
-        play(card.getColorType(),1);
+        if(TableUtils.isWinningCard(table)) {
+            addCardsToNextPlayerDeck(table, 4);
+            play(card.getColorType(), 1);
+        }else{
+            table.setChallengeActive(true);
+            table.setPreviousColor(table.getActiveColor());
+            table.setBluff(TableUtils.isBluff(table));
+            play(card.getColorType(), 0);
+        }
     }
 
     @Override

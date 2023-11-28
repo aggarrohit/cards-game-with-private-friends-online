@@ -160,6 +160,42 @@ public class UserActionController {
 
     }
 
+    @MessageMapping("/draw4Cards/{tableId}")
+    public void draw4Cards(SimpMessageHeaderAccessor accessor) throws AuthenticationException, JsonProcessingException {
+        String tableId = accessor.getDestination().substring("/draw4Cards/".length()+4);
+
+        String userName = getUsername(accessor);
+
+        boolean isActivePlayer = TableUtils.checkIfActivePlayer(tableId,userName);
+
+
+        if(!isActivePlayer){
+            sendToUser(getUsername(accessor),"its not your turn!");
+        }else
+        {
+            Tables.draw4Cards(tableId,this);
+        }
+    }
+
+
+    @MessageMapping("/challengeDraw4/{tableId}")
+    public void challengeDraw4(SimpMessageHeaderAccessor accessor) throws AuthenticationException, JsonProcessingException {
+        String tableId = accessor.getDestination().substring("/challengeDraw4/".length()+4);
+
+        String userName = getUsername(accessor);
+
+        boolean isActivePlayer = TableUtils.checkIfActivePlayer(tableId,userName);
+
+
+        if(!isActivePlayer){
+            sendToUser(getUsername(accessor),"its not your turn!");
+        }else
+        {
+            Tables.challengeDraw4(tableId,this);
+        }
+    }
+
+
     private String getUsername(SimpMessageHeaderAccessor accessor) throws AuthenticationException {
         try {
             Map<String, Object> sessionAttributes = accessor.getSessionAttributes();

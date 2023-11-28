@@ -19,7 +19,6 @@ public abstract class CardPlayedImpl implements CardPlayed {
 
     Table table;
     Card playedCard;
-//    Player player;
 
     @Autowired
     UserActionController userActionController;

@@ -18,9 +18,11 @@ public class TableCommons {
     private Card activecard;
     private int activePlayerIndex;
     private ColorType activeColor;
+    private ColorType previousColor;
     private boolean isCardDrawn;
     private int unoSaidPhases;
     private boolean isReversed;
+    private boolean isChallengeActive;
     private int numberOfPlayers;
     private boolean isGameCompleted;
 }
