@@ -1,7 +1,6 @@
 package club.friendsgame.cardrift.models;
 
 import lombok.*;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -10,22 +9,18 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Component
 @ToString
-public class Table {
+public class TableCommons {
 
     private int id;
     private String tableId;
-    private List<Player> players;
-    private List<Card> commonDeck;
-    private List<Card> sideDeck;
+    private List<PlayerCommons> playersCommons;
     private Card activecard;
     private int activePlayerIndex;
     private ColorType activeColor;
     private boolean isCardDrawn;
-    private int unoSaidPhase;//2 current player said uno, 1 player who said uno has played or skipped, 0 uno said dismissed
+    private int unoSaidPhases;
     private boolean isReversed;
     private int numberOfPlayers;
-    private int previousPlayerIndex;
     private boolean isGameCompleted;
 }

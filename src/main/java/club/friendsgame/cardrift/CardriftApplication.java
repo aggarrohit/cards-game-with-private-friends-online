@@ -20,10 +20,19 @@ public class CardriftApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 //		Map<String,Table> tables =  Tables.tables;
-		Tables.addTable("1234",1);
-		Tables.addPlayerToTable(Player.builder()
-						.id(12)
-						.name("test player")
-				.build(),"1234");
+//		Tables.addTable("1234",3);
+//		Tables.addPlayerToTable(Player.builder()
+//						.id(11)
+//						.name("test player11")
+//				.build(),"1234");
+//		Tables.addPlayerToTable(Player.builder()
+//				.id(12)
+//				.name("test player12")
+//				.build(),"1234");
+//		Tables.addPlayerToTable(Player.builder()
+//				.id(13)
+//				.name("test player13")
+//				.build(),"1234");
+//		Tables.startGame("1234");
 	}
 }
