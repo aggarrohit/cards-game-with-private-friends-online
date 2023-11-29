@@ -20,6 +20,7 @@ public class TableMapper {
                 .unoSaidPhases(table.getUnoSaidPhase())
                 .isGameCompleted(table.isGameCompleted())
                 .isChallengeActive(table.isChallengeActive())
+                .numberOfAccumulatedCards(table.getNumberOfAccumulatedCards())
                 .playersCommons(table.getPlayers().stream().map(player -> PlayerCommons .builder()
                                                                                         .id(player.getId())
                                                                                         .name(player.getName())

@@ -44,11 +44,11 @@ public class Tables {
     public static void startGame(String tableId){
         Table table = tables.get(tableId);
         List<Player> players = table.getPlayers();
-        // distribute 7 cards to players//TODO make it again 7 below
+        // distribute 7 cards to players
         for(Player player:players){
             List<Card> cards = new ArrayList<>();
 
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 7; i++) {
                 cards.add(TableUtils.takeRandomCard(table.getCommonDeck(),table));
             }
             player.setDeck(cards);
@@ -111,7 +111,13 @@ public class Tables {
         Table table = tables.get(tableId);
         Card activeCard = table.getActivecard();
 
+        // if accumulated cards present then only draw2 and wild-draw4 are valid
+        if(table.getNumberOfAccumulatedCards()>0) return playedCard.getCardType()==CardType.DRAW2 || playedCard.getCardType()==CardType.WILDDRAW4;
+
+        // wild-draw4 and wild cards are always valid if no accumulated cards present
         if(activeCard.getColorType()==null) return true;
+
+
 
         switch (playedCard.getCardType()){
             case NUMBER:{
@@ -144,13 +150,21 @@ public class Tables {
         if(table.isCardDrawn()){
             userActionController.sendToUser(activePlayer.getName(),"You have already picked card!");
         }else {
-            Card card = TableUtils.takeRandomCard(table.getCommonDeck(),table);
-            //add that card to active player
+            // if there are accumulated cards then add those to current player
+            if(table.getNumberOfAccumulatedCards()>0){
+                TableUtils.addCardsToPlayerDeck(table,table.getNumberOfAccumulatedCards(),activePlayer);
+                table.setNumberOfAccumulatedCards(0);
+                TableUtils.updatePreviousPlayerIndex(table);
+                // after picking accumulated cards the player is skipped
+                TableUtils.changeActivePlayer(table,1);
+                TableUtils.updateUnoSaidPhase(table);
+                // for next player cardDrawn is false
+                table.setCardDrawn(false);
+            }else{
+                TableUtils.addCardsToPlayerDeck(table,1,activePlayer);
+                table.setCardDrawn(true);
+            }
 
-            List<Card> playerCards = activePlayer.getDeck();
-            playerCards.add(card);
-            activePlayer.setDeck(playerCards);
-            table.setCardDrawn(true);
             userActionController.sendToTable(tableId);
         }
     }
@@ -301,17 +315,19 @@ public class Tables {
         userActionController.sendToTable(tableId);
     }
 
-    public static void draw4Cards(String tableId, UserActionController userActionController) {// TODO
+    public static void draw4Cards(String tableId, UserActionController userActionController) {
         Table table = Tables.tables.get(tableId);
         Player player = TableUtils.getActivePlayer(table);
         if(!table.isChallengeActive()){
             userActionController.sendToUser(player.getName(),"Invalid action!");
         }else {
             // add 4 cards to active player
+            // add accumulated cards
 
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 4+table.getNumberOfAccumulatedCards(); i++) {
                 player.getDeck().add(TableUtils.takeRandomCard(table.getCommonDeck(), table));
             }
+            table.setNumberOfAccumulatedCards(0);
             // change previous/active player index
             table.setPreviousPlayerIndex(table.getActivePlayerIndex());
             TableUtils.changeActivePlayer(table, 1);
@@ -322,29 +338,31 @@ public class Tables {
         }
     }
 
-    public static void challengeDraw4(String tableId, UserActionController userActionController) { // TODO
+    public static void challengeDraw4(String tableId, UserActionController userActionController) {
         Table table = Tables.tables.get(tableId);
         Player activePlayer = TableUtils.getActivePlayer(table);
         if(!table.isChallengeActive()){
             userActionController.sendToUser(activePlayer.getName(),"Invalid action!");
         }else {
-//            boolean isChallengePass = TableUtils.isChallengePass(table);
             if (table.isBluff()) {
                 // previous player picks 4 cards
+                // add accumulated cards
                 Player playerPrevious = TableUtils.getPlayerWithIndex(table, table.getPreviousPlayerIndex());
-                for (int i = 0; i < 4; i++) {
+                for (int i = 0; i < 4+ table.getNumberOfAccumulatedCards(); i++) {
                     playerPrevious.getDeck().add(TableUtils.takeRandomCard(table.getCommonDeck(), table));
                 }
             } else {
                 // add 6 cards to active player
+                // add accumulated cards
 
-                for (int i = 0; i < 6; i++) {
+                for (int i = 0; i < 6+ table.getNumberOfAccumulatedCards(); i++) {
                     activePlayer.getDeck().add(TableUtils.takeRandomCard(table.getCommonDeck(), table));
                 }
                 //change previous/active player
                 table.setPreviousPlayerIndex(table.getActivePlayerIndex());
                 TableUtils.changeActivePlayer(table, 1);
             }
+            table.setNumberOfAccumulatedCards(0);
             // change challenge flag
             table.setChallengeActive(false);
             table.setBluff(false);

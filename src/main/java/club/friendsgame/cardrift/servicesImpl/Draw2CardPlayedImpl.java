@@ -25,7 +25,7 @@ public class Draw2CardPlayedImpl extends CardPlayedImpl implements Draw2CardPlay
     @Override
     public void playCard(Table table, Card card) {
         super.playCard(table, card);
-        addCardsToNextPlayerDeck(table,2);
-        play(playedCard.getColorType(),1);
+        table.setNumberOfAccumulatedCards(table.getNumberOfAccumulatedCards()+2);
+        play(playedCard.getColorType(),0);
     }
 }

@@ -25,4 +25,5 @@ public class TableCommons {
     private boolean isChallengeActive;
     private int numberOfPlayers;
     private boolean isGameCompleted;
+    private int numberOfAccumulatedCards;
 }

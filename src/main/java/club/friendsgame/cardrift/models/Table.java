@@ -31,4 +31,5 @@ public class Table {
     private int numberOfPlayers;
     private int previousPlayerIndex;
     private boolean isGameCompleted;
+    private int numberOfAccumulatedCards;
 }

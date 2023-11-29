@@ -66,7 +66,7 @@ public class UserActionController {
     }
 
     @MessageMapping("/cardPlayed/{tableId}")
-    public void cardPlayed(@Payload Card card, SimpMessageHeaderAccessor accessor) throws AuthenticationException, JsonProcessingException {
+    public void cardPlayed(@Payload Card card, SimpMessageHeaderAccessor accessor) throws AuthenticationException {
         String tableId = accessor.getDestination().substring("/cardPlayed/".length()+4);
 
         String userName = getUsername(accessor);

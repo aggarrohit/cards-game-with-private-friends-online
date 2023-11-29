@@ -180,12 +180,8 @@ public class TableUtils {
         return player.getDeck().size()==1;
     }
 
-//    public static boolean isChallengePass(Table table) {// TODO
-//        Player previousPlayer = TableUtils.getPlayerWithIndex(table,table.getPreviousPlayerIndex());
-//        return !previousPlayer.getDeck().stream().filter(card -> card.getColorType()==table.getPreviousColor()).toList().isEmpty();
-//    }
 
-    public static boolean isBluff(Table table) {// TODO
+    public static boolean isBluff(Table table) {
         Player player = TableUtils.getActivePlayer(table);
         return !player.getDeck().stream().filter(card -> card.getColorType()==table.getActiveColor()).toList().isEmpty();
     }

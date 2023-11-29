@@ -1,10 +1,7 @@
 package club.friendsgame.cardrift.servicesImpl;
 
 import club.friendsgame.cardrift.controllers.UserActionController;
-import club.friendsgame.cardrift.models.Card;
-import club.friendsgame.cardrift.models.ColorType;
-import club.friendsgame.cardrift.models.Player;
-import club.friendsgame.cardrift.models.Table;
+import club.friendsgame.cardrift.models.*;
 import club.friendsgame.cardrift.services.CardPlayed;
 import club.friendsgame.cardrift.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +45,7 @@ public abstract class CardPlayedImpl implements CardPlayed {
         table.setCardDrawn(false);
         userActionController.sendToTable(table.getTableId());
     }
+
 
     @Override
     public void updateSideDeck() {
