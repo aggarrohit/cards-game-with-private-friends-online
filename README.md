@@ -59,7 +59,7 @@ To get started with the CardRift, follow these steps:
 ## Project Management
 
 ### Architecture :
-![Planning.png](project_management%2FPlanning.png)
+![Planning.png](project_management%2Fplanning.png)
 
 
 
