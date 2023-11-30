@@ -4,6 +4,7 @@ import club.friendsgame.cardrift.models.Card;
 import club.friendsgame.cardrift.models.CardType;
 import club.friendsgame.cardrift.models.Table;
 import club.friendsgame.cardrift.services.ReverseCardPlayed;
+import club.friendsgame.cardrift.utils.TableUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,7 +20,14 @@ public class ReverseCardPlayedImpl extends CardPlayedImpl implements ReverseCard
     public void playCard(Table table, Card card) {
         super.playCard(table, card);
         updateIsReversed(table);
-        play(playedCard.getColorType(),0);
+        int numberOfActivePlayers = table.getPlayers().stream().filter(player -> player.getRank()==0).toList().size();
+        // if there are only 2 active players then reverse works as skip
+        if(numberOfActivePlayers==2){
+            play(playedCard.getColorType(),1);
+        }else{
+            play(playedCard.getColorType(),0);
+        }
+
     }
 
 
